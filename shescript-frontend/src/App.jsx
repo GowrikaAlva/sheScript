@@ -3,7 +3,6 @@ import SearchBar from "./components/SearchBar"
 import ResultCard from "./components/ResultCard"
 import WarningBanner from "./components/WarningBanner"
 import DosageChecklist from "./components/DosageChecklist"
-import LanguageSwitch from "./components/LanguageSwitch"
 
 import { translateResult } from "./utils/translate"
 import { geminiExplain, geminiExplainFromImage } from "./utils/gemini"
@@ -204,11 +203,48 @@ function App() {
         {searched && !loading && displayData && (
           <>
             <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
-              <LanguageSwitch
-                selectedLanguage={selectedLanguage}
-                onLanguageChange={handleLanguageChange}
-                isLoading={isTranslating}
-              />
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                fontWeight: 600,
+                color: "#9E9488",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                marginBottom: 8,
+              }}>Output language</div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                {[
+                  { code: "en", label: "English" },
+                  { code: "kn", label: "ಕನ್ನಡ" },
+                  { code: "hi", label: "हिन्दी" },
+                  { code: "ta", label: "தமிழ்" },
+                  { code: "te", label: "తెలుగు" },
+                  { code: "ml", label: "മലയാളം" },
+                ].map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    disabled={isTranslating}
+                    onClick={() => handleLanguageChange(l.code)}
+                    style={{
+                      padding: "7px 16px",
+                      borderRadius: 999,
+                      border: `1.5px solid ${selectedLanguage === l.code ? "#1C3A2F" : "#DDD5C8"}`,
+                      background: selectedLanguage === l.code ? "#1C3A2F" : "transparent",
+                      color: selectedLanguage === l.code ? "#F5EFE6" : "#6B6259",
+                      fontSize: 13,
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontWeight: 500,
+                      cursor: isTranslating ? "not-allowed" : "pointer",
+                      opacity: isTranslating ? 0.6 : 1,
+                      transition: "all 0.15s",
+                    }}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+                {isTranslating && <span style={{ fontSize: 13, color: "#7A9E8E", fontFamily: "'DM Sans', sans-serif" }}>Translating...</span>}
+              </div>
             </div>
 
             <div className="fade-up-2" style={{ width: "100%", maxWidth: 560 }}>

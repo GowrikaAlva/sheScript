@@ -3,7 +3,6 @@ import { useState, useRef } from "react";
 
 export default function SearchBar({ onSearch, loading }) {
   const [query, setQuery] = useState("");
-  const [language, setLanguage] = useState("en");
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [dragOver, setDragOver] = useState(false);
@@ -41,7 +40,7 @@ export default function SearchBar({ onSearch, loading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!query.trim() && !imageFile) return;
-    onSearch({ query, language, imageFile });
+    onSearch({ query, imageFile });
   };
 
   return (
@@ -154,33 +153,6 @@ export default function SearchBar({ onSearch, loading }) {
           <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={(e) => handleImage(e.target.files[0])} />
         </div>
 
-        {/* Language pills */}
-        <div>
-          <Label>Output language</Label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {languages.map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                onClick={() => setLanguage(l.code)}
-                style={{
-                  padding: "7px 16px",
-                  borderRadius: 999,
-                  border: `1.5px solid ${language === l.code ? "#1C3A2F" : "#DDD5C8"}`,
-                  background: language === l.code ? "#1C3A2F" : "transparent",
-                  color: language === l.code ? "#F5EFE6" : "#6B6259",
-                  fontSize: 13,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                }}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
-        </div>
 
         {/* Submit */}
         <button
