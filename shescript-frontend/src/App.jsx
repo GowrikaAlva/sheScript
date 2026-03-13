@@ -1,107 +1,145 @@
-import { useState, useEffect } from "react"
-import SearchBar from "./components/SearchBar"
-import ResultCard from "./components/ResultCard"
-import WarningBanner from "./components/WarningBanner"
-import DosageChecklist from "./components/DosageChecklist"
+import { useState, useEffect } from "react";
+import SearchBar from "./components/SearchBar";
+import ResultCard from "./components/ResultCard";
+import WarningBanner from "./components/WarningBanner";
+import DosageChecklist from "./components/DosageChecklist";
 
-import { translateResult } from "./utils/translate"
-import { geminiExplain, geminiExplainFromImage } from "./utils/gemini"
+import { translateResult } from "./utils/translate";
+import { geminiExplain, geminiExplainFromImage } from "./utils/gemini";
+import medicines from "./data/medicines.json";
 
 function App() {
+  const [loading, setLoading] = useState(false);
+  const [originalData, setOriginalData] = useState(null);
+  const [translatedData, setTranslatedData] = useState(null);
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [history, setHistory] = useState([]);
 
-  const [loading, setLoading] = useState(false)
-  const [originalData, setOriginalData] = useState(null)
-  const [translatedData, setTranslatedData] = useState(null)
-  const [selectedLanguage, setSelectedLanguage] = useState("en")
-  const [isTranslating, setIsTranslating] = useState(false)
-  const [searched, setSearched] = useState(false)
-  const [history, setHistory] = useState([])
+  const cache = {};
 
   /* ───────── Load search history ───────── */
 
   async function loadHistory() {
     try {
-      const res = await fetch("http://localhost:3000/history")
-      const data = await res.json()
-      setHistory(data)
+      const res = await fetch("http://localhost:3000/history");
+      const data = await res.json();
+      setHistory(data);
     } catch (err) {
-      console.log("History error:", err)
+      console.log("History error:", err);
     }
   }
 
   useEffect(() => {
-    loadHistory()
-  }, [])
+    loadHistory();
+  }, []);
 
   /* ───────── Search handler ───────── */
 
   const handleSearch = async ({ query, imageFile }) => {
+    setLoading(true);
+    setSearched(false);
+    setTranslatedData(null);
+    setSelectedLanguage("en");
 
-    setLoading(true)
-    setSearched(false)
-    setTranslatedData(null)
-    setSelectedLanguage("en")
+    let response;
+    const key = query?.toLowerCase().trim();
 
-    const response = imageFile
-      ? await geminiExplainFromImage(imageFile)
-      : await geminiExplain(query)
+    /* 1️⃣ Check cache */
+
+    if (cache[key]) {
+      response = { success: true, data: cache[key] };
+    } else if (!imageFile && medicines[key]) {
+
+    /* 2️⃣ Check local medicine database */
+      const med = medicines[key];
+
+      response = {
+        success: true,
+        data: {
+          medicine_name: query,
+          used_for: "Common medicine used in treatment",
+          simple_explanation:
+            "This medicine is commonly prescribed by doctors.",
+          side_effects: [],
+          safe_dosage: "Take as prescribed by doctor",
+          food_interactions: [],
+          pregnancy_safe: med.pregnancy_safe,
+          pregnancy_note: med.warning || "",
+          hormonal_effects: med.hormonal_interaction
+            ? "May affect hormones or menstrual cycle"
+            : "",
+          eli5_explanation:
+            "A medicine doctors give to help treat health problems.",
+          warning_flags: [],
+        },
+      };
+
+      cache[key] = response.data;
+    } else {
+
+    /* 3️⃣ Use Gemini only if needed */
+      response = imageFile
+        ? await geminiExplainFromImage(imageFile)
+        : await geminiExplain(query);
+
+      if (response.success) {
+        cache[key] = response.data;
+      }
+    }
+
+    /* 4️⃣ Process result */
 
     if (response.success) {
-
-      setOriginalData(response.data)
-      setTranslatedData(response.data)
-      setSearched(true)
-
-      /* Save search to backend */
+      setOriginalData(response.data);
+      setTranslatedData(response.data);
+      setSearched(true);
 
       try {
-
         await fetch("http://localhost:3000/save", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             medicine: response.data.medicine_name,
-            result: response.data.description || response.data,
-            language: selectedLanguage
-          })
-        })
+            result: response.data.simple_explanation,
+            language: selectedLanguage,
+          }),
+        });
 
-        loadHistory()
-
+        loadHistory();
       } catch (err) {
-        console.log("Save error:", err)
+        console.log("Save error:", err);
       }
-
     } else {
-      alert(response.error)
+      alert(response.error);
     }
 
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   /* ───────── Language switch ───────── */
 
   async function handleLanguageChange(langCode) {
-
-    setSelectedLanguage(langCode)
+    setSelectedLanguage(langCode);
 
     if (langCode === "en") {
-      setTranslatedData(originalData)
-      return
+      setTranslatedData(originalData);
+      return;
     }
 
-    setIsTranslating(true)
+    setIsTranslating(true);
 
-    const translated = await translateResult(originalData, langCode)
+    const translated = await translateResult(originalData, langCode);
 
-    setTranslatedData(translated)
+    setTranslatedData(translated);
 
-    setIsTranslating(false)
+    setIsTranslating(false);
   }
 
-  const displayData = translatedData || originalData
+  const displayData = translatedData || originalData;
 
   return (
     <>
@@ -121,18 +159,18 @@ function App() {
         .fade-up-4 { animation: fadeUp 0.4s ease 0.24s both; }
       `}</style>
 
-      <div style={{
-        minHeight: "100vh",
-        background: "#F5EFE6",
-        backgroundImage: "radial-gradient(circle at 20% 20%, #E8F5EE 0%, transparent 50%), radial-gradient(circle at 80% 80%, #F5E8E0 0%, transparent 50%)",
-        padding: "48px 16px 64px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: 20,
-      }}>
-
-        {/* Search Bar */}
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#F5EFE6",
+          padding: "48px 16px 64px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 20,
+        }}
+      >
+        {/* Search */}
 
         <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
           <SearchBar onSearch={handleSearch} loading={loading} />
@@ -142,77 +180,62 @@ function App() {
 
         {history.length > 0 && (
           <div style={{ width: "100%", maxWidth: 560 }}>
-            <h4 style={{
-              fontFamily: "'DM Sans', sans-serif",
-              marginBottom: 8,
-              color: "#5C6F66"
-            }}>
+            <h4
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                marginBottom: 8,
+                color: "#5C6F66",
+              }}
+            >
               Recent Searches
             </h4>
 
             {history.map((item, index) => (
-              <div key={index} style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13,
-                padding: "6px 0",
-                color: "#6E7F77"
-              }}>
+              <div
+                key={index}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 13,
+                  padding: "6px 0",
+                  color: "#6E7F77",
+                }}
+              >
                 {item.medicine} ({item.language})
               </div>
             ))}
           </div>
         )}
 
-        {/* Loading Spinner */}
+        {/* Loading */}
 
         {loading && (
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 10,
-            padding: "32px 0",
-          }}>
-            <div style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              border: "3px solid #D4EAE0",
-              borderTopColor: "#2E7D5E",
-              animation: "spin 0.8s linear infinite",
-            }} />
-
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 13,
-              color: "#7A9E8E"
-            }}>
-              Reading your prescription...
-            </p>
-
-            <style>{`
-              @keyframes spin {
-                to { transform: rotate(360deg); }
-              }
-            `}</style>
-          </div>
+          <p style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Reading prescription...
+          </p>
         )}
 
         {/* Results */}
 
         {searched && !loading && displayData && (
           <>
+            {/* Language Switch */}
+
             <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                fontWeight: 600,
-                color: "#9E9488",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                marginBottom: 8,
-              }}>Output language</div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+              <div
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "#9E9488",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: 8,
+                }}
+              >
+                Output language
+              </div>
+
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {[
                   { code: "en", label: "English" },
                   { code: "kn", label: "ಕನ್ನಡ" },
@@ -223,27 +246,20 @@ function App() {
                 ].map((l) => (
                   <button
                     key={l.code}
-                    type="button"
-                    disabled={isTranslating}
                     onClick={() => handleLanguageChange(l.code)}
                     style={{
                       padding: "7px 16px",
                       borderRadius: 999,
-                      border: `1.5px solid ${selectedLanguage === l.code ? "#1C3A2F" : "#DDD5C8"}`,
-                      background: selectedLanguage === l.code ? "#1C3A2F" : "transparent",
-                      color: selectedLanguage === l.code ? "#F5EFE6" : "#6B6259",
-                      fontSize: 13,
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontWeight: 500,
-                      cursor: isTranslating ? "not-allowed" : "pointer",
-                      opacity: isTranslating ? 0.6 : 1,
-                      transition: "all 0.15s",
+                      border: "1px solid #ccc",
+                      background:
+                        selectedLanguage === l.code ? "#1C3A2F" : "white",
+                      color: selectedLanguage === l.code ? "white" : "black",
+                      cursor: "pointer",
                     }}
                   >
                     {l.label}
                   </button>
                 ))}
-                {isTranslating && <span style={{ fontSize: 13, color: "#7A9E8E", fontFamily: "'DM Sans', sans-serif" }}>Translating...</span>}
               </div>
             </div>
 
@@ -255,7 +271,7 @@ function App() {
             </div>
 
             <div className="fade-up-3" style={{ width: "100%", maxWidth: 560 }}>
-              <ResultCard data={displayData} />
+              <ResultCard result={displayData} />
             </div>
 
             <div className="fade-up-4" style={{ width: "100%", maxWidth: 560 }}>
@@ -263,26 +279,9 @@ function App() {
             </div>
           </>
         )}
-
-        {/* Footer */}
-
-        <p style={{
-          fontFamily: "'DM Sans', sans-serif",
-          fontSize: 12,
-          color: "#A89E94",
-          marginTop: 8,
-          textAlign: "center",
-          maxWidth: 360,
-          lineHeight: 1.6,
-        }}>
-          SheScript does not replace your doctor.
-          <br />
-          It helps you understand what you were given. 💚
-        </p>
-
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

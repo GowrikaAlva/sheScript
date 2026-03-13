@@ -16,22 +16,17 @@ export const LANGUAGES = [
 // ─────────────────────────────────────────────
 export async function translateText(text, targetLanguage) {
   if (targetLanguage === "en") return text;
-  if (!text || text.trim() === "") return text;
+  if (!text) return text;
 
   try {
-    const response = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${targetLanguage}`,
-    );
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${targetLanguage}&dt=t&q=${encodeURIComponent(text)}`;
 
-    const data = await response.json();
+    const res = await fetch(url);
+    const data = await res.json();
 
-    if (data.responseStatus === 200) {
-      return data.responseData.translatedText;
-    } else {
-      return text; // return original if failed
-    }
-  } catch (error) {
-    console.error("Translation failed:", error);
+    return data[0].map((item) => item[0]).join("");
+  } catch (err) {
+    console.log("Translation error:", err);
     return text;
   }
 }
