@@ -1,7 +1,7 @@
 # SheScript – AI Prescription Translator for Women
 
-SheScript is an AI-powered web application that converts complex medical prescriptions into **simple explanations designed for women**.  
-Users can enter or upload a prescription and instantly receive clear information about the medicine, dosage, safety warnings, and usage instructions.
+SheScript is an AI-powered web application that converts complex medical prescriptions into **simple explanations designed for women**.
+Users can enter or upload a prescription and instantly receive clear information about the medicine, dosage, safety warnings and usage instructions.
 
 The goal of SheScript is to help women—especially elderly patients, rural users, and first-time mothers—**understand their prescriptions and take medicines safely.**
 
@@ -20,12 +20,12 @@ The goal of SheScript is to help women—especially elderly patients, rural user
 
 ## Tech Stack
 
-**Frontend:** React + Vite  
-**Styling:** Tailwind CSS  
-**AI Processing:** Google Gemini API  
-**Translation:** LibreTranslate API
-**Database:** MongoDB  
-**Backend:** Node.js + Express
+- **Frontend:** React + Vite
+- **Styling:** Tailwind CSS
+- **AI Processing:** Google Gemini API
+- **Translation:** LibreTranslate API
+- **Database:** MongoDB
+- **Backend:** Node.js + Express
 
 ---
 
