@@ -1,22 +1,65 @@
 import express from "express";
+import { MongoClient } from "mongodb";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const app = express();
-
-// middleware
 app.use(cors());
 app.use(express.json());
 
-// test route
-app.get("/", (req, res) => {
-  res.send("SheScript backend is running");
+const uri = "mongodb+srv://shescript_user:shescript_user_password@cluster0.qbmfkqh.mongodb.net/?appName=Cluster0";
+
+const client = new MongoClient(uri);
+
+let collection;
+
+async function connectDB() {
+    await client.connect();
+    const db = client.db("shescript");
+    collection = db.collection("searches");
+    console.log("MongoDB Connected");
+}
+
+connectDB();
+
+/* POST /save */
+
+app.post("/save", async (req, res) => {
+    try {
+
+        const { medicine, result, language } = req.body;
+
+        await collection.insertOne({
+            medicine,
+            result,
+            language,
+            date: new Date()
+        });
+
+        res.json({ success: true });
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-const PORT = process.env.PORT || 5000;
+/* GET /history */
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.get("/history", async (req, res) => {
+    try {
+
+        const data = await collection
+            .find()
+            .sort({ date: -1 })
+            .limit(5)
+            .toArray();
+
+        res.json(data);
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.listen(3000, () => {
+    console.log("Server running on port 3000");
 });
