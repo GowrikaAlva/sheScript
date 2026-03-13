@@ -1,0 +1,202 @@
+{
+  "paracetamol": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": null
+  },
+  "ibuprofen": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "May reduce menstrual flow",
+    "hormonal_interaction": true,
+    "pcos_note": "Use with caution, consult doctor",
+    "warning": "Avoid during pregnancy especially third trimester"
+  },
+  "aspirin": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "May increase bleeding during periods",
+    "hormonal_interaction": false,
+    "pcos_note": "Low dose may be prescribed by doctor only",
+    "warning": "Do not take during pregnancy without doctor advice"
+  },
+  "metformin": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": false,
+    "cycle_effects": "May help regulate periods in PCOS",
+    "hormonal_interaction": true,
+    "pcos_note": "Commonly prescribed for PCOS management",
+    "warning": null
+  },
+  "folic acid": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Recommended for women planning pregnancy",
+    "warning": null
+  },
+  "iron tablets": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Helps with heavy period related anaemia",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": null
+  },
+  "levothyroxine": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Untreated thyroid can cause irregular periods, this medicine helps",
+    "hormonal_interaction": true,
+    "pcos_note": "Thyroid issues common in PCOS, this treats it",
+    "warning": "Take on empty stomach 30 mins before food, do not skip doses"
+  },
+  "birth control pill": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "Regulates or stops periods depending on type",
+    "hormonal_interaction": true,
+    "pcos_note": "Often prescribed for PCOS to regulate cycle",
+    "warning": "Do not take if pregnant"
+  },
+  "amoxicillin": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "May cause yeast infection which affects discharge",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": null
+  },
+  "azithromycin": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": null
+  },
+  "ciprofloxacin": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Avoid unless no alternative",
+    "warning": "Avoid during pregnancy and breastfeeding"
+  },
+  "vitamin d": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Deficiency linked to irregular periods",
+    "hormonal_interaction": false,
+    "pcos_note": "Very important for PCOS women, often deficient",
+    "warning": null
+  },
+  "calcium": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Helps reduce period cramps",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe and recommended",
+    "warning": "Do not take at same time as iron tablets, gap by 2 hours"
+  },
+  "omeprazole": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": "Avoid during breastfeeding"
+  },
+  "pantoprazole": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": null
+  },
+  "cetirizine": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe to use",
+    "warning": "Avoid during breastfeeding"
+  },
+  "doxycycline": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Avoid unless prescribed specifically",
+    "warning": "Do not take during pregnancy, can harm baby"
+  },
+  "progesterone": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": false,
+    "cycle_effects": "Directly regulates menstrual cycle",
+    "hormonal_interaction": true,
+    "pcos_note": "Often prescribed to trigger period in PCOS",
+    "warning": null
+  },
+  "estrogen": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "Directly controls cycle and symptoms",
+    "hormonal_interaction": true,
+    "pcos_note": "Used in hormone therapy, consult doctor",
+    "warning": "Do not take without doctor prescription"
+  },
+  "clonazepam": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Use only if prescribed",
+    "warning": "Avoid during pregnancy and breastfeeding"
+  },
+  "metronidazole": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Safe outside pregnancy",
+    "warning": "Avoid in first trimester of pregnancy"
+  },
+  "atorvastatin": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "none",
+    "hormonal_interaction": false,
+    "pcos_note": "Avoid unless specifically prescribed",
+    "warning": "Strictly avoid during pregnancy, can harm baby"
+  },
+  "diclofenac": {
+    "pregnancy_safe": false,
+    "breastfeeding_safe": false,
+    "cycle_effects": "May reduce period pain but affects flow",
+    "hormonal_interaction": true,
+    "pcos_note": "Use with caution",
+    "warning": "Avoid during third trimester of pregnancy"
+  },
+  "prednisolone": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Long term use may cause irregular periods",
+    "hormonal_interaction": true,
+    "pcos_note": "Use only if prescribed, short term",
+    "warning": "Do not stop suddenly, taper dose as doctor advises"
+  },
+  "inositol": {
+    "pregnancy_safe": true,
+    "breastfeeding_safe": true,
+    "cycle_effects": "Helps regulate cycle in PCOS",
+    "hormonal_interaction": true,
+    "pcos_note": "Highly recommended supplement for PCOS",
+    "warning": null
+  }
+}
