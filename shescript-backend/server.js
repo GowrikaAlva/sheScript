@@ -1,12 +1,15 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uri = "mongodb+srv://shescript_user:shescript_user_password@cluster0.qbmfkqh.mongodb.net/?appName=Cluster0";
+const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri);
 
@@ -25,7 +28,6 @@ connectDB();
 
 app.post("/save", async (req, res) => {
     try {
-
         const { medicine, result, language } = req.body;
 
         await collection.insertOne({
@@ -46,7 +48,6 @@ app.post("/save", async (req, res) => {
 
 app.get("/history", async (req, res) => {
     try {
-
         const data = await collection
             .find()
             .sort({ date: -1 })
