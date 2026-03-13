@@ -1,96 +1,109 @@
 // WarningBanner.jsx — Person 1
-// Displays warning flags from Person 3's getWomenFlags() output
-// Props: flags — array of { type: "danger" | "warning" | "info", message: string }
-// Also handles result.pregnancy_safe and result.hormonal_effects from Gemini
+import { getWomenFlags } from "../utils/womenFlags";  
 
 const CONFIG = {
   danger: {
-    bg: "#FEE2E2",
-    border: "#C94040",
-    text: "#991B1B",
+    bg: "#FDF1F1",
+    strip: "#C94040",
+    text: "#7A1F1F",
+    subtext: "#A84040",
     icon: "🚨",
-    label: "Important Warning",
   },
   warning: {
-    bg: "#FEF9C3",
-    border: "#D97706",
-    text: "#92400E",
+    bg: "#FDF8EE",
+    strip: "#C49A2A",
+    text: "#6B4A0E",
+    subtext: "#9A7020",
     icon: "⚠️",
-    label: "Caution",
   },
   info: {
-    bg: "#E0F2FE",
-    border: "#0284C7",
-    text: "#075985",
+    bg: "#F0F6FB",
+    strip: "#3A7CA5",
+    text: "#1A3A52",
+    subtext: "#4A6A82",
     icon: "ℹ️",
-    label: "Note",
   },
 };
 
-// Single banner unit
-function Banner({ type, message }) {
-  const style = CONFIG[type] || CONFIG.info;
+function Banner({ type, label, message }) {
+  const s = CONFIG[type] || CONFIG.info;
   return (
-    <div
-      className="rounded-2xl px-5 py-4 border-l-4"
-      style={{
-        backgroundColor: style.bg,
-        borderColor: style.border,
-      }}
-    >
-      <p
-        className="text-sm font-semibold mb-1"
-        style={{ color: style.text }}
-      >
-        {style.icon} {style.label}
-      </p>
-      <p className="text-sm" style={{ color: style.text }}>
-        {message}
-      </p>
+    <div style={{
+      background: s.bg,
+      borderRadius: 16,
+      overflow: "hidden",
+      border: `1px solid ${s.strip}22`,
+      boxShadow: "0 2px 10px rgba(0,0,0,0.04)",
+      display: "flex",
+    }}>
+      {/* left accent bar */}
+      <div style={{ width: 4, background: s.strip, flexShrink: 0, borderRadius: "4px 0 0 4px" }} />
+      <div style={{ padding: "12px 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+          <span style={{ fontSize: 14 }}>{s.icon}</span>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: 12,
+            fontWeight: 700,
+            color: s.text,
+            letterSpacing: "0.04em",
+          }}>{label}</span>
+        </div>
+        <p style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          color: s.subtext,
+          lineHeight: 1.6,
+          margin: 0,
+        }}>{message}</p>
+      </div>
     </div>
   );
 }
 
-// Main export
-export default function WarningBanner({ flags = [], result = {} }) {
-  const allFlags = [...flags];
+export default function WarningBanner({ medicineName, result = {} }) {
+  const flags = getWomenFlags ? getWomenFlags(medicineName) : [];
+  const extraFlags = [];
 
-  // Auto-generate banners from Gemini result fields
   if (result.pregnancy_safe === false) {
-    allFlags.unshift({
+    extraFlags.unshift({
       type: "danger",
-      message:
-        result.pregnancy_note ||
-        "This medicine is NOT safe during pregnancy. Consult your doctor immediately.",
+      label: "Pregnancy Warning",
+      message: result.pregnancy_note || "This medicine is NOT safe during pregnancy. Please consult your doctor immediately.",
     });
   }
-
   if (result.hormonal_effects) {
-    allFlags.push({
-      type: "warning",
-      message: `Hormonal effect: ${result.hormonal_effects}`,
-    });
+    extraFlags.push({ type: "warning", label: "Hormonal Effect", message: result.hormonal_effects });
   }
 
-  if (result.warning_flags && Array.isArray(result.warning_flags)) {
-    result.warning_flags.forEach((w) =>
-      allFlags.push({ type: "warning", message: w })
-    );
-  }
+  const allFlags = [...extraFlags, ...(flags || [])];
 
   if (allFlags.length === 0) {
     return (
-      <div className="bg-green-50 border-l-4 border-green-400 rounded-2xl px-5 py-4">
-        <p className="text-green-700 text-sm font-semibold">✅ No major warnings found for this medicine.</p>
+      <div style={{
+        width: "100%", maxWidth: 560, margin: "0 auto",
+        background: "#F0FAF5",
+        borderRadius: 16,
+        border: "1px solid #A7D9BF",
+        padding: "12px 18px",
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+      }}>
+        <span style={{ fontSize: 18 }}>✅</span>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: "#1C6645", margin: 0 }}>
+          No major warnings found for this medicine.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex flex-col gap-3">
+    <div style={{ width: "100%", maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", gap: 8 }}>
       {allFlags.map((flag, i) => (
-        <Banner key={i} type={flag.type} message={flag.message} />
+        <Banner key={i} type={flag.type} label={flag.label} message={flag.message} />
       ))}
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');`}</style>
     </div>
   );
 }
