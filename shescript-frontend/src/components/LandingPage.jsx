@@ -16,15 +16,20 @@ export default function LandingPage() {
         textAlign: "center",
       }}
     >
-      {/* Logo */}
+      {/* Header */}
 
-      <div style={{ marginBottom: 24 }}>
+      <div
+        style={{
+          marginBottom: 28,
+        }}
+      >
         <h1
           style={{
             fontFamily: "'DM Serif Display', serif",
-            fontSize: 60,
+            fontSize: 64,
             color: "#1C3A2F",
-            marginBottom: 8,
+            margin: 0,
+            letterSpacing: "-1px",
           }}
         >
           SheScript
@@ -33,12 +38,15 @@ export default function LandingPage() {
         <p
           style={{
             fontFamily: "'DM Sans', sans-serif",
-            letterSpacing: "0.12em",
+            letterSpacing: "0.14em",
             color: "#7A8E84",
-            fontSize: 14,
+            fontSize: 13,
+            marginTop: 6,
+            fontWeight: 500,
+            textTransform: "uppercase",
           }}
         >
-          PRESCRIPTION TRANSLATOR FOR WOMEN
+          Prescription Translator for Women
         </p>
       </div>
 
@@ -49,14 +57,14 @@ export default function LandingPage() {
           fontFamily: "'DM Sans', sans-serif",
           fontSize: 18,
           color: "#4E5C55",
-          maxWidth: 600,
+          maxWidth: 640,
           lineHeight: 1.7,
-          marginBottom: 40,
+          marginBottom: 44,
         }}
       >
         Understand your prescriptions clearly. SheScript translates complex
         medical instructions into simple language and highlights important
-        warnings for women’s health.
+        warnings for women's health.
       </p>
 
       {/* Features */}
@@ -64,10 +72,10 @@ export default function LandingPage() {
       <div
         style={{
           display: "flex",
-          gap: 24,
+          gap: 22,
           flexWrap: "wrap",
           justifyContent: "center",
-          marginBottom: 40,
+          marginBottom: 42,
         }}
       >
         <Feature icon="📷" title="Scan Prescriptions" />
@@ -76,12 +84,12 @@ export default function LandingPage() {
         <Feature icon="📅" title="Dosage Checklist" />
       </div>
 
-      {/* Button */}
+      {/* CTA Button */}
 
       <button
         onClick={() => navigate("/app")}
         style={{
-          padding: "16px 40px",
+          padding: "16px 42px",
           borderRadius: 999,
           border: "none",
           background: "linear-gradient(135deg,#1C3A2F,#2E7D5E)",
@@ -91,6 +99,7 @@ export default function LandingPage() {
           fontWeight: 600,
           cursor: "pointer",
           boxShadow: "0 6px 18px rgba(28,58,47,0.25)",
+          transition: "all 0.25s ease",
         }}
       >
         Get Started →
@@ -108,6 +117,7 @@ function Feature({ icon, title }) {
         padding: "20px 28px",
         borderRadius: 16,
         width: 180,
+        transition: "all 0.2s",
       }}
     >
       <div style={{ fontSize: 26 }}>{icon}</div>
@@ -117,6 +127,7 @@ function Feature({ icon, title }) {
           fontFamily: "'DM Sans', sans-serif",
           marginTop: 10,
           fontSize: 14,
+          color: "#2F2F2F",
         }}
       >
         {title}
