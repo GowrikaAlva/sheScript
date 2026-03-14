@@ -170,6 +170,7 @@ function App() {
         style={{
           width: "100%",
           maxWidth: "720px",
+          margin: "0 auto",
         }}
       >
         {/* Search */}
@@ -186,7 +187,7 @@ function App() {
           <>
             {/* Language Buttons */}
 
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20, textAlign: "center" }}>
               <div
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
@@ -201,13 +202,7 @@ function App() {
                 Output Language
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 8,
-                }}
-              >
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
                 {[
                   { code: "en", label: "English" },
                   { code: "kn", label: "ಕನ್ನಡ" },
@@ -244,7 +239,8 @@ function App() {
             <button
               onClick={handleDownloadPDF}
               style={{
-                marginTop: 20,
+                display: "block",
+                margin: "20px auto 0",
                 padding: "14px 32px",
                 borderRadius: 14,
                 border: "none",
