@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "./components/SearchBar";
 import ResultCard from "./components/ResultCard";
 import WarningBanner from "./components/WarningBanner";
@@ -9,12 +10,19 @@ import { geminiExplain, geminiExplainFromImage } from "./utils/gemini";
 import medicines from "./data/medicines.json";
 
 function App() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [originalData, setOriginalData] = useState(null);
   const [translatedData, setTranslatedData] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
   const [searched, setSearched] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("shescript_token");
+    localStorage.removeItem("shescript_user");
+    navigate("/login");
+  };
 
   const cache = {};
 
@@ -164,8 +172,33 @@ function App() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        position: "relative",
       }}
     >
+      {/* Logout Button */}
+      <button
+        onClick={handleLogout}
+        style={{
+          position: "absolute",
+          top: 20,
+          right: 24,
+          padding: "10px 22px",
+          borderRadius: 12,
+          border: "none",
+          background: "linear-gradient(135deg, #1C3A2F 0%, #2E7D5E 100%)",
+          color: "#F5EFE6",
+          fontSize: 13,
+          fontFamily: "'DM Sans', sans-serif",
+          fontWeight: 600,
+          cursor: "pointer",
+          letterSpacing: "0.02em",
+          transition: "all 0.2s",
+          boxShadow: "0 4px 12px rgba(28,58,47,0.18)",
+        }}
+      >
+        Logout
+      </button>
+
       <div
         style={{
           width: "100%",

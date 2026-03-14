@@ -87,7 +87,7 @@ export default function LandingPage() {
       {/* CTA Button */}
 
       <button
-        onClick={() => navigate("/app")}
+        onClick={() => navigate("/register")}
         style={{
           padding: "16px 42px",
           borderRadius: 999,
@@ -104,6 +104,28 @@ export default function LandingPage() {
       >
         Get Started →
       </button>
+
+      <p
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          color: "#9E9488",
+          marginTop: 16,
+        }}
+      >
+        Already have an account?{" "}
+        <span
+          onClick={() => navigate("/login")}
+          style={{
+            color: "#2E7D5E",
+            fontWeight: 600,
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+        >
+          Log in
+        </span>
+      </p>
     </div>
   );
 }

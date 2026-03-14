@@ -1,8 +1,11 @@
 import express from "express";
 import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import dns from "node:dns";
+
+import authRoutes from "./routes/auth.routes.js";
 
 // Force Google DNS to bypass local network DNS SRV blocking
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -24,13 +27,27 @@ async function connectDB() {
         await client.connect();
         const db = client.db("shescript");
         collection = db.collection("searches");
-        console.log("MongoDB Connected");
+        console.log("MongoDB Connected (native driver)");
     } catch (err) {
         console.error("MongoDB connection failed:", err.message);
         console.log("Server running without DB. Retrying in 5 seconds...");
         setTimeout(connectDB, 5000);
     }
 }
+
+async function connectMongoose() {
+    try {
+        await mongoose.connect(uri, { dbName: "shescript" });
+        console.log("Mongoose Connected");
+    } catch (err) {
+        console.error("Mongoose connection failed:", err.message);
+        setTimeout(connectMongoose, 5000);
+    }
+}
+
+/* ── Auth Routes ── */
+
+app.use("/api/auth", authRoutes);
 
 /* POST /save */
 
@@ -78,4 +95,5 @@ app.get("/history", async (req, res) => {
 app.listen(3000, () => {
     console.log("Server running on port 3000");
     connectDB();
+    connectMongoose();
 });
