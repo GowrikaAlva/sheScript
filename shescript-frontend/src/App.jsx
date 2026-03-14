@@ -15,6 +15,7 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
   const [searched, setSearched] = useState(false);
+
   const cache = {};
 
   /* ───────── PDF Generation ───────── */
@@ -22,16 +23,6 @@ function App() {
   function handleDownloadPDF() {
     const element = document.getElementById("pdf-report-content");
     if (!element) return;
-
-    const styleTagsHTML = Array.from(document.querySelectorAll("style"))
-      .map((s) => `<style>${s.innerHTML}</style>`)
-      .join("\n");
-
-    const linkTagsHTML = Array.from(
-      document.querySelectorAll('link[rel="stylesheet"]'),
-    )
-      .map((l) => `<link rel="stylesheet" href="${l.href}" />`)
-      .join("\n");
 
     const medicineName = originalData?.medicine_name || "medicine";
     const lang = selectedLanguage;
@@ -49,9 +40,6 @@ function App() {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
 
-        ${linkTagsHTML}
-        ${styleTagsHTML}
-
         <style>
           body{
             padding:30px;
@@ -60,6 +48,7 @@ function App() {
           }
           button{display:none !important;}
         </style>
+
       </head>
 
       <body>
@@ -90,18 +79,11 @@ function App() {
     let response;
 
     const input = query?.toLowerCase().trim();
-
-    /* Fuzzy matching for medicines */
-
     const key = Object.keys(medicines).find((med) => input?.includes(med));
-
-    /* Cache */
 
     if (cache[input]) {
       response = { success: true, data: cache[input] };
     } else if (!imageFile && key) {
-
-    /* Local medicine database */
       const med = medicines[key];
 
       response = {
@@ -123,8 +105,6 @@ function App() {
 
       cache[input] = response.data;
     } else {
-
-    /* Gemini fallback */
       response = imageFile
         ? await geminiExplainFromImage(imageFile)
         : await geminiExplain(query);
@@ -133,8 +113,6 @@ function App() {
         cache[input] = response.data;
       }
     }
-
-    /* Process result */
 
     if (response.success) {
       let data = response.data;
@@ -149,24 +127,6 @@ function App() {
       setOriginalData(data);
       setTranslatedData(data);
       setSearched(true);
-
-      try {
-        await fetch("http://localhost:3000/save", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            medicine: data.medicine_name,
-            result: data.simple_explanation,
-            language: selectedLanguage,
-          }),
-        });
-
-        loadHistory();
-      } catch (err) {
-        console.log("Save error:", err);
-      }
     } else {
       alert(response.error);
     }
@@ -196,52 +156,58 @@ function App() {
   const displayData = translatedData || originalData;
 
   return (
-    <>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#F5EFE6",
+        padding: "60px 20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <div
         style={{
-          minHeight: "100vh",
-          background: "#F5EFE6",
-          padding: "48px 16px 64px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 20,
+          width: "100%",
+          maxWidth: "720px",
         }}
       >
         {/* Search */}
 
-        <div style={{ width: "100%", maxWidth: 560 }}>
-          <SearchBar onSearch={handleSearch} loading={loading} />
-        </div>
+        <SearchBar onSearch={handleSearch} loading={loading} />
 
+        {loading && <p style={{ marginTop: 20 }}>Reading prescription...</p>}
 
-        {loading && <p>Reading prescription...</p>}
-        {isTranslating && <p>Translating...</p>}
+        {isTranslating && <p style={{ marginTop: 20 }}>Translating...</p>}
 
         {/* Results */}
 
         {searched && !loading && displayData && (
           <>
-            {/* Language buttons */}
+            {/* Language Buttons */}
 
-            <div style={{ width: "100%", maxWidth: 560 }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11,
-                fontWeight: 600,
-                color: "#9E9488",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                marginBottom: 10,
-              }}>
+            <div style={{ marginTop: 20 }}>
+              <div
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  color: "#9E9488",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  marginBottom: 10,
+                }}
+              >
                 Output Language
               </div>
 
-              <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: 8,
-              }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 8,
+                }}
+              >
                 {[
                   { code: "en", label: "English" },
                   { code: "kn", label: "ಕನ್ನಡ" },
@@ -254,22 +220,17 @@ function App() {
                     key={l.code}
                     onClick={() => handleLanguageChange(l.code)}
                     style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 13,
-                      fontWeight: selectedLanguage === l.code ? 600 : 500,
                       padding: "8px 18px",
                       borderRadius: 20,
-                      border: selectedLanguage === l.code
-                        ? "2px solid #2E7D5E"
-                        : "1.5px solid #DDD5C8",
-                      background: selectedLanguage === l.code
-                        ? "#2E7D5E"
-                        : "#FDFAF6",
-                      color: selectedLanguage === l.code
-                        ? "#FFFFFF"
-                        : "#4A4440",
+                      border:
+                        selectedLanguage === l.code
+                          ? "2px solid #2E7D5E"
+                          : "1px solid #DDD5C8",
+                      background:
+                        selectedLanguage === l.code ? "#2E7D5E" : "#FDFAF6",
+                      color:
+                        selectedLanguage === l.code ? "#FFFFFF" : "#4A4440",
                       cursor: "pointer",
-                      transition: "all 0.2s",
                     }}
                   >
                     {l.label}
@@ -278,11 +239,12 @@ function App() {
               </div>
             </div>
 
-            {/* Download PDF */}
+            {/* Download */}
 
             <button
               onClick={handleDownloadPDF}
               style={{
+                marginTop: 20,
                 padding: "14px 32px",
                 borderRadius: 14,
                 border: "none",
@@ -292,11 +254,6 @@ function App() {
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: 600,
                 cursor: "pointer",
-                letterSpacing: "0.02em",
-                transition: "all 0.2s",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 8,
               }}
             >
               Download Report
@@ -304,7 +261,12 @@ function App() {
 
             {/* Report */}
 
-            <div id="pdf-report-content" style={{ width: 560 }}>
+            <div
+              id="pdf-report-content"
+              style={{
+                marginTop: 20,
+              }}
+            >
               <WarningBanner
                 medicineName={originalData.medicine_name}
                 result={originalData}
@@ -320,7 +282,7 @@ function App() {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
