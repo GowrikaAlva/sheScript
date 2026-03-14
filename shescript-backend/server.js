@@ -2,12 +2,19 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
+import searchRoutes from "./routes/search.routes.js";
+
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Define the API route path
+app.use("/api/search", searchRoutes);
+
+
 
 const uri = process.env.MONGO_URI;
 
