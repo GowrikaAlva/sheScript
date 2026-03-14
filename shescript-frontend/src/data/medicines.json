@@ -1,5 +1,12 @@
 {
   "paracetamol": {
+    "medicine_name": "Paracetamol",
+    "used_for": "Fever and mild to moderate pain such as headache, body pain, and menstrual cramps.",
+    "simple_explanation": "Paracetamol works by reducing pain signals in the brain and lowering fever.",
+    "side_effects": ["Nausea", "Stomach discomfort", "Rare allergic reactions"],
+    "safe_dosage": "1 tablet (500 mg) every 6–8 hours after food if needed",
+    "food_interactions": [],
+    "eli5_explanation": "This medicine helps bring down fever and reduce pain so your body feels better.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
     "cycle_effects": "none",
@@ -7,15 +14,31 @@
     "pcos_note": "Safe to use",
     "warning": null
   },
+
   "ibuprofen": {
+    "medicine_name": "Ibuprofen",
+    "used_for": "Pain, inflammation, menstrual cramps, and fever.",
+    "simple_explanation": "Ibuprofen reduces inflammation and blocks chemicals in the body that cause pain and swelling.",
+    "side_effects": ["Stomach irritation", "Heartburn", "Dizziness"],
+    "safe_dosage": "1 tablet (200–400 mg) every 8 hours after food for up to 5 days",
+    "food_interactions": ["Avoid alcohol as it increases stomach irritation."],
+    "eli5_explanation": "This medicine reduces swelling and pain so you feel more comfortable.",
     "pregnancy_safe": false,
     "breastfeeding_safe": false,
     "cycle_effects": "May reduce menstrual flow",
     "hormonal_interaction": true,
     "pcos_note": "Use with caution, consult doctor",
-    "warning": "Avoid during pregnancy especially third trimester"
+    "warning": "Avoid during pregnancy especially in the third trimester"
   },
+
   "aspirin": {
+    "medicine_name": "Aspirin",
+    "used_for": "Pain relief, fever reduction, and preventing blood clots.",
+    "simple_explanation": "Aspirin works by reducing inflammation and preventing blood platelets from sticking together.",
+    "side_effects": ["Stomach irritation", "Increased bleeding risk", "Nausea"],
+    "safe_dosage": "1 tablet (75–325 mg) once daily after food if prescribed",
+    "food_interactions": ["Avoid alcohol to reduce stomach bleeding risk."],
+    "eli5_explanation": "This medicine helps reduce pain and also keeps blood flowing smoothly.",
     "pregnancy_safe": false,
     "breastfeeding_safe": false,
     "cycle_effects": "May increase bleeding during periods",
@@ -23,7 +46,15 @@
     "pcos_note": "Low dose may be prescribed by doctor only",
     "warning": "Do not take during pregnancy without doctor advice"
   },
+
   "metformin": {
+    "medicine_name": "Metformin",
+    "used_for": "Type 2 diabetes and PCOS management.",
+    "simple_explanation": "Metformin lowers blood sugar levels by improving how your body responds to insulin.",
+    "side_effects": ["Nausea", "Diarrhea", "Stomach upset"],
+    "safe_dosage": "1 tablet (500 mg) twice daily after meals",
+    "food_interactions": ["Avoid excessive alcohol."],
+    "eli5_explanation": "This medicine helps your body control sugar levels in the blood.",
     "pregnancy_safe": true,
     "breastfeeding_safe": false,
     "cycle_effects": "May help regulate periods in PCOS",
@@ -31,7 +62,15 @@
     "pcos_note": "Commonly prescribed for PCOS management",
     "warning": null
   },
+
   "folic acid": {
+    "medicine_name": "Folic Acid",
+    "used_for": "Preventing anemia and supporting pregnancy health.",
+    "simple_explanation": "Folic acid helps your body make healthy red blood cells and supports fetal development.",
+    "side_effects": ["Rare nausea", "Bloating"],
+    "safe_dosage": "1 tablet (400–800 mcg) once daily after food",
+    "food_interactions": [],
+    "eli5_explanation": "This vitamin helps your body make healthy blood and supports pregnancy.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
     "cycle_effects": "none",
@@ -39,39 +78,69 @@
     "pcos_note": "Recommended for women planning pregnancy",
     "warning": null
   },
+
   "iron tablets": {
+    "medicine_name": "Iron Tablets",
+    "used_for": "Treating iron deficiency anemia.",
+    "simple_explanation": "Iron supplements help your body produce more healthy red blood cells.",
+    "side_effects": ["Constipation", "Dark stools", "Stomach discomfort"],
+    "safe_dosage": "1 tablet once daily after food",
+    "food_interactions": ["Avoid taking with milk or calcium supplements."],
+    "eli5_explanation": "This medicine helps increase iron in your blood so you feel less tired.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
-    "cycle_effects": "Helps with heavy period related anaemia",
+    "cycle_effects": "Helps with heavy period related anemia",
     "hormonal_interaction": false,
     "pcos_note": "Safe to use",
     "warning": null
   },
+
   "levothyroxine": {
+    "medicine_name": "Levothyroxine",
+    "used_for": "Treating hypothyroidism (low thyroid levels).",
+    "simple_explanation": "Levothyroxine replaces the thyroid hormone your body lacks.",
+    "side_effects": [
+      "Headache",
+      "Rapid heartbeat if overdosed",
+      "Weight changes"
+    ],
+    "safe_dosage": "1 tablet once daily in the morning on an empty stomach",
+    "food_interactions": [
+      "Avoid taking with calcium or iron supplements within 2 hours."
+    ],
+    "eli5_explanation": "This medicine replaces the thyroid hormone your body needs to stay healthy.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
-    "cycle_effects": "Untreated thyroid can cause irregular periods, this medicine helps",
+    "cycle_effects": "Treating thyroid helps regulate periods",
     "hormonal_interaction": true,
-    "pcos_note": "Thyroid issues common in PCOS, this treats it",
-    "warning": "Take on empty stomach 30 mins before food, do not skip doses"
+    "pcos_note": "Thyroid issues common in PCOS",
+    "warning": "Take on empty stomach 30 minutes before food"
   },
-  "birth control pill": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "Regulates or stops periods depending on type",
-    "hormonal_interaction": true,
-    "pcos_note": "Often prescribed for PCOS to regulate cycle",
-    "warning": "Do not take if pregnant"
-  },
+
   "amoxicillin": {
+    "medicine_name": "Amoxicillin",
+    "used_for": "Bacterial infections such as throat infection or urinary infection.",
+    "simple_explanation": "Amoxicillin kills bacteria causing infection.",
+    "side_effects": ["Nausea", "Diarrhea", "Skin rash"],
+    "safe_dosage": "1 capsule (500 mg) three times daily after food for 5 days",
+    "food_interactions": [],
+    "eli5_explanation": "This antibiotic helps kill harmful bacteria in your body.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
-    "cycle_effects": "May cause yeast infection which affects discharge",
+    "cycle_effects": "May cause yeast infection",
     "hormonal_interaction": false,
     "pcos_note": "Safe to use",
     "warning": null
   },
+
   "azithromycin": {
+    "medicine_name": "Azithromycin",
+    "used_for": "Respiratory infections, throat infections, and some bacterial infections.",
+    "simple_explanation": "Azithromycin stops bacteria from growing.",
+    "side_effects": ["Stomach upset", "Diarrhea", "Nausea"],
+    "safe_dosage": "1 tablet (500 mg) once daily for 3 days",
+    "food_interactions": [],
+    "eli5_explanation": "This antibiotic stops bacteria from multiplying so your body can recover.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
     "cycle_effects": "none",
@@ -79,124 +148,52 @@
     "pcos_note": "Safe to use",
     "warning": null
   },
-  "ciprofloxacin": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Avoid unless no alternative",
-    "warning": "Avoid during pregnancy and breastfeeding"
-  },
+
   "vitamin d": {
+    "medicine_name": "Vitamin D",
+    "used_for": "Vitamin D deficiency and bone health.",
+    "simple_explanation": "Vitamin D helps your body absorb calcium and keeps bones strong.",
+    "side_effects": ["Rare nausea", "High calcium if overdosed"],
+    "safe_dosage": "1 tablet once weekly after food or as prescribed",
+    "food_interactions": [],
+    "eli5_explanation": "This vitamin helps keep your bones strong and healthy.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
     "cycle_effects": "Deficiency linked to irregular periods",
     "hormonal_interaction": false,
-    "pcos_note": "Very important for PCOS women, often deficient",
+    "pcos_note": "Very important for PCOS women",
     "warning": null
   },
+
   "calcium": {
+    "medicine_name": "Calcium Supplement",
+    "used_for": "Bone health and preventing calcium deficiency.",
+    "simple_explanation": "Calcium strengthens bones and teeth.",
+    "side_effects": ["Constipation", "Bloating"],
+    "safe_dosage": "1 tablet once daily after food",
+    "food_interactions": ["Avoid taking at same time as iron tablets."],
+    "eli5_explanation": "This supplement helps keep bones strong.",
     "pregnancy_safe": true,
     "breastfeeding_safe": true,
     "cycle_effects": "Helps reduce period cramps",
     "hormonal_interaction": false,
     "pcos_note": "Safe and recommended",
-    "warning": "Do not take at same time as iron tablets, gap by 2 hours"
+    "warning": "Do not take at same time as iron tablets"
   },
-  "omeprazole": {
-    "pregnancy_safe": true,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Safe to use",
-    "warning": "Avoid during breastfeeding"
-  },
-  "pantoprazole": {
-    "pregnancy_safe": true,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Safe to use",
-    "warning": null
-  },
+
   "cetirizine": {
+    "medicine_name": "Cetirizine",
+    "used_for": "Allergies such as sneezing, runny nose, and itching.",
+    "simple_explanation": "Cetirizine blocks histamine which causes allergic symptoms.",
+    "side_effects": ["Drowsiness", "Dry mouth"],
+    "safe_dosage": "1 tablet once daily at night",
+    "food_interactions": ["Avoid alcohol as it increases drowsiness."],
+    "eli5_explanation": "This medicine stops allergic reactions that cause sneezing and itching.",
     "pregnancy_safe": true,
     "breastfeeding_safe": false,
     "cycle_effects": "none",
     "hormonal_interaction": false,
     "pcos_note": "Safe to use",
     "warning": "Avoid during breastfeeding"
-  },
-  "doxycycline": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Avoid unless prescribed specifically",
-    "warning": "Do not take during pregnancy, can harm baby"
-  },
-  "progesterone": {
-    "pregnancy_safe": true,
-    "breastfeeding_safe": false,
-    "cycle_effects": "Directly regulates menstrual cycle",
-    "hormonal_interaction": true,
-    "pcos_note": "Often prescribed to trigger period in PCOS",
-    "warning": null
-  },
-  "estrogen": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "Directly controls cycle and symptoms",
-    "hormonal_interaction": true,
-    "pcos_note": "Used in hormone therapy, consult doctor",
-    "warning": "Do not take without doctor prescription"
-  },
-  "clonazepam": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Use only if prescribed",
-    "warning": "Avoid during pregnancy and breastfeeding"
-  },
-  "metronidazole": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Safe outside pregnancy",
-    "warning": "Avoid in first trimester of pregnancy"
-  },
-  "atorvastatin": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "none",
-    "hormonal_interaction": false,
-    "pcos_note": "Avoid unless specifically prescribed",
-    "warning": "Strictly avoid during pregnancy, can harm baby"
-  },
-  "diclofenac": {
-    "pregnancy_safe": false,
-    "breastfeeding_safe": false,
-    "cycle_effects": "May reduce period pain but affects flow",
-    "hormonal_interaction": true,
-    "pcos_note": "Use with caution",
-    "warning": "Avoid during third trimester of pregnancy"
-  },
-  "prednisolone": {
-    "pregnancy_safe": true,
-    "breastfeeding_safe": true,
-    "cycle_effects": "Long term use may cause irregular periods",
-    "hormonal_interaction": true,
-    "pcos_note": "Use only if prescribed, short term",
-    "warning": "Do not stop suddenly, taper dose as doctor advises"
-  },
-  "inositol": {
-    "pregnancy_safe": true,
-    "breastfeeding_safe": true,
-    "cycle_effects": "Helps regulate cycle in PCOS",
-    "hormonal_interaction": true,
-    "pcos_note": "Highly recommended supplement for PCOS",
-    "warning": null
   }
 }

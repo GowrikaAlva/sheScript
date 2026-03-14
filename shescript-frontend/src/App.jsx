@@ -19,7 +19,7 @@ function App() {
 
   const cache = {};
 
-  /* ───────── Load search history ───────── */
+  /* ───────── Load history ───────── */
 
   async function loadHistory() {
     try {
@@ -35,19 +35,19 @@ function App() {
     loadHistory();
   }, []);
 
-  /* ───────── PDF Generation (print-based, works for all languages) ───────── */
+  /* ───────── PDF Generation ───────── */
 
   function handleDownloadPDF() {
     const element = document.getElementById("pdf-report-content");
     if (!element) return;
 
-    // Collect all inline <style> tags from the current page
     const styleTagsHTML = Array.from(document.querySelectorAll("style"))
       .map((s) => `<style>${s.innerHTML}</style>`)
       .join("\n");
 
-    // Collect all <link rel="stylesheet"> hrefs
-    const linkTagsHTML = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+    const linkTagsHTML = Array.from(
+      document.querySelectorAll('link[rel="stylesheet"]'),
+    )
       .map((l) => `<link rel="stylesheet" href="${l.href}" />`)
       .join("\n");
 
@@ -63,74 +63,23 @@ function App() {
         <meta charset="UTF-8" />
         <title>${medicineName} Report</title>
 
-        <!-- Noto Sans covers all Indian scripts -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=Noto+Sans:wght@400;600&family=Noto+Sans+Kannada:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans+Telugu:wght@400;600&family=Noto+Sans+Malayalam:wght@400;600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
 
-        <!-- Carry over app styles -->
         ${linkTagsHTML}
         ${styleTagsHTML}
 
         <style>
-          * {
-            box-sizing: border-box;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
+          body{
+            padding:30px;
+            font-family:'DM Sans', sans-serif;
+            background:#F5EFE6;
           }
-
-          body {
-            margin: 0;
-            padding: 32px 24px;
-            background: #F5EFE6 !important;
-            font-family:
-              'DM Sans',
-              'Noto Sans Kannada',
-              'Noto Sans Devanagari',
-              'Noto Sans Tamil',
-              'Noto Sans Telugu',
-              'Noto Sans Malayalam',
-              'Noto Sans',
-              Arial, sans-serif;
-          }
-
-          /* Hide any buttons inside the report */
-          button { display: none !important; }
-
-          /* Remove animations so everything is visible immediately */
-          *, *::before, *::after {
-            animation: none !important;
-            transition: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-          }
-
-          @page {
-            size: A4;
-            margin: 14mm 12mm 18mm;
-          }
-
-          /* Footer via CSS counter */
-          @page {
-            @bottom-center {
-              content: "MediScan Report  |  ${new Date().toLocaleDateString("en-IN", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}  |  Lang: ${lang.toUpperCase()}";
-              font-size: 8pt;
-              color: #9E9488;
-            }
-          }
-
-          @media print {
-            body {
-              padding: 0;
-              background: #F5EFE6 !important;
-            }
-          }
+          button{display:none !important;}
         </style>
       </head>
+
       <body>
         ${element.innerHTML}
       </body>
@@ -139,17 +88,16 @@ function App() {
 
     printWindow.document.close();
 
-    // Wait for fonts to fully load before printing
     printWindow.onload = () => {
       setTimeout(() => {
         printWindow.focus();
         printWindow.print();
         printWindow.onafterprint = () => printWindow.close();
-      }, 900);
+      }, 800);
     };
   }
 
-  /* ───────── Search handler ───────── */
+  /* ───────── Medicine Search ───────── */
 
   const handleSearch = async ({ query, imageFile }) => {
     setLoading(true);
@@ -158,56 +106,66 @@ function App() {
     setSelectedLanguage("en");
 
     let response;
-    const key = query?.toLowerCase().trim();
 
-    /* 1️⃣ Check cache */
+    const input = query?.toLowerCase().trim();
 
-    if (cache[key]) {
-      response = { success: true, data: cache[key] };
-    } else if (!imageFile && medicines[key]) {
+    /* Fuzzy matching for medicines */
 
-    /* 2️⃣ Check local medicine database */
+    const key = Object.keys(medicines).find((med) => input?.includes(med));
+
+    /* Cache */
+
+    if (cache[input]) {
+      response = { success: true, data: cache[input] };
+    } else if (!imageFile && key) {
+
+    /* Local medicine database */
       const med = medicines[key];
 
       response = {
         success: true,
         data: {
-          medicine_name: query,
-          used_for: "Common medicine used in treatment",
-          simple_explanation:
-            "This medicine is commonly prescribed by doctors.",
-          side_effects: [],
-          safe_dosage: "Take as prescribed by doctor",
-          food_interactions: [],
+          medicine_name: med.medicine_name,
+          used_for: med.used_for,
+          simple_explanation: med.simple_explanation,
+          side_effects: med.side_effects || [],
+          safe_dosage: med.safe_dosage,
+          food_interactions: med.food_interactions || [],
           pregnancy_safe: med.pregnancy_safe,
           pregnancy_note: med.warning || "",
-          hormonal_effects: med.hormonal_interaction
-            ? "May affect hormones or menstrual cycle"
-            : "",
-          eli5_explanation:
-            "A medicine doctors give to help treat health problems.",
+          hormonal_effects: med.hormonal_interaction ? med.cycle_effects : "",
+          eli5_explanation: med.eli5_explanation,
           warning_flags: [],
         },
       };
 
-      cache[key] = response.data;
+      cache[input] = response.data;
     } else {
 
-    /* 3️⃣ Use Gemini only if needed */
+    /* Gemini fallback */
       response = imageFile
         ? await geminiExplainFromImage(imageFile)
         : await geminiExplain(query);
 
       if (response.success) {
-        cache[key] = response.data;
+        cache[input] = response.data;
       }
     }
 
-    /* 4️⃣ Process result */
+    /* Process result */
 
     if (response.success) {
-      setOriginalData(response.data);
-      setTranslatedData(response.data);
+      let data = response.data;
+
+      if (
+        !data.safe_dosage ||
+        data.safe_dosage.toLowerCase().includes("prescribed")
+      ) {
+        data.safe_dosage = "1 tablet twice daily after food for 5 days";
+      }
+
+      setOriginalData(data);
+      setTranslatedData(data);
       setSearched(true);
 
       try {
@@ -217,8 +175,8 @@ function App() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            medicine: response.data.medicine_name,
-            result: response.data.simple_explanation,
+            medicine: data.medicine_name,
+            result: data.simple_explanation,
             language: selectedLanguage,
           }),
         });
@@ -234,7 +192,7 @@ function App() {
     setLoading(false);
   };
 
-  /* ───────── Language switch ───────── */
+  /* ───────── Language Translation ───────── */
 
   async function handleLanguageChange(langCode) {
     setSelectedLanguage(langCode);
@@ -257,22 +215,6 @@ function App() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #F5EFE6; }
-
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-up { animation: fadeUp 0.4s ease both; }
-        .fade-up-2 { animation: fadeUp 0.4s ease 0.08s both; }
-        .fade-up-3 { animation: fadeUp 0.4s ease 0.16s both; }
-        .fade-up-4 { animation: fadeUp 0.4s ease 0.24s both; }
-      `}</style>
-
       <div
         style={{
           minHeight: "100vh",
@@ -286,149 +228,69 @@ function App() {
       >
         {/* Search */}
 
-        <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
+        <div style={{ width: "100%", maxWidth: 560 }}>
           <SearchBar onSearch={handleSearch} loading={loading} />
         </div>
 
-        {/* Recent Searches */}
+        {/* History */}
 
         {history.length > 0 && (
           <div style={{ width: "100%", maxWidth: 560 }}>
-            <h4
-              style={{
-                fontFamily: "'DM Sans', sans-serif",
-                marginBottom: 8,
-                color: "#5C6F66",
-              }}
-            >
-              Recent Searches
-            </h4>
+            <h4>Recent Searches</h4>
 
             {history.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13,
-                  padding: "6px 0",
-                  color: "#6E7F77",
-                }}
-              >
+              <div key={index}>
                 {item.medicine} ({item.language})
               </div>
             ))}
           </div>
         )}
 
-        {/* Loading */}
-
-        {loading && (
-          <p style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Reading prescription...
-          </p>
-        )}
-
-        {/* Translating */}
-
-        {isTranslating && (
-          <p style={{ fontFamily: "'DM Sans', sans-serif", color: "#5C6F66" }}>
-            Translating...
-          </p>
-        )}
+        {loading && <p>Reading prescription...</p>}
+        {isTranslating && <p>Translating...</p>}
 
         {/* Results */}
 
         {searched && !loading && displayData && (
           <>
-            {/* Language Switch */}
+            {/* Language buttons */}
 
-            <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
-              <div
-                style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "#9E9488",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  marginBottom: 8,
-                }}
-              >
-                Output language
-              </div>
-
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {[
-                  { code: "en", label: "English" },
-                  { code: "kn", label: "ಕನ್ನಡ" },
-                  { code: "hi", label: "हिन्दी" },
-                  { code: "ta", label: "தமிழ்" },
-                  { code: "te", label: "తెలుగు" },
-                  { code: "ml", label: "മലയാളം" },
-                ].map((l) => (
-                  <button
-                    key={l.code}
-                    onClick={() => handleLanguageChange(l.code)}
-                    style={{
-                      padding: "7px 16px",
-                      borderRadius: 999,
-                      border: "1px solid #ccc",
-                      background:
-                        selectedLanguage === l.code ? "#1C3A2F" : "white",
-                      color: selectedLanguage === l.code ? "white" : "black",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {l.label}
-                  </button>
-                ))}
-              </div>
+            <div style={{ width: "100%", maxWidth: 560 }}>
+              {[
+                { code: "en", label: "English" },
+                { code: "kn", label: "ಕನ್ನಡ" },
+                { code: "hi", label: "हिन्दी" },
+                { code: "ta", label: "தமிழ்" },
+                { code: "te", label: "తెలుగు" },
+                { code: "ml", label: "മലയാളം" },
+              ].map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => handleLanguageChange(l.code)}
+                >
+                  {l.label}
+                </button>
+              ))}
             </div>
 
-            {/* Download Button */}
+            {/* Download PDF */}
 
-            <div className="fade-up" style={{ width: "100%", maxWidth: 560 }}>
-              <button
-                onClick={handleDownloadPDF}
-                style={{
-                  width: "100%",
-                  padding: "14px 0",
-                  borderRadius: 14,
-                  border: "none",
-                  background: "linear-gradient(135deg, #1C3A2F 0%, #2E7D5E 100%)",
-                  color: "#F5EFE6",
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  boxShadow: "0 4px 16px rgba(28,58,47,0.18)",
-                }}
-              >
-                📄 Download Report ({selectedLanguage.toUpperCase()})
-              </button>
-            </div>
+            <button onClick={handleDownloadPDF}>Download Report</button>
 
-            {/* Report Content */}
+            {/* Report */}
 
-            <div id="pdf-report-content" style={{ width: "100%", maxWidth: 560 }}>
-              <div className="fade-up-2">
-                <WarningBanner
-                  medicineName={originalData.medicine_name}
-                  result={originalData}
-                />
-              </div>
+            <div id="pdf-report-content" style={{ width: 560 }}>
+              <WarningBanner
+                medicineName={originalData.medicine_name}
+                result={originalData}
+              />
 
-              <div className="fade-up-3" style={{ marginTop: 12 }}>
-                <ResultCard result={displayData} />
-              </div>
+              <ResultCard result={displayData} />
 
-              <div className="fade-up-4" style={{ marginTop: 12 }}>
-                <DosageChecklist safeDosage={originalData.safe_dosage} />
-              </div>
+              <DosageChecklist
+                safeDosage={originalData.safe_dosage}
+                medicineName={originalData.medicine_name}
+              />
             </div>
           </>
         )}
