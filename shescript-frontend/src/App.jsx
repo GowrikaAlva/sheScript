@@ -256,26 +256,82 @@ function App() {
             {/* Language buttons */}
 
             <div style={{ width: "100%", maxWidth: 560 }}>
-              {[
-                { code: "en", label: "English" },
-                { code: "kn", label: "ಕನ್ನಡ" },
-                { code: "hi", label: "हिन्दी" },
-                { code: "ta", label: "தமிழ்" },
-                { code: "te", label: "తెలుగు" },
-                { code: "ml", label: "മലയാളം" },
-              ].map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => handleLanguageChange(l.code)}
-                >
-                  {l.label}
-                </button>
-              ))}
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11,
+                fontWeight: 600,
+                color: "#9E9488",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                marginBottom: 10,
+              }}>
+                Output Language
+              </div>
+
+              <div style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 8,
+              }}>
+                {[
+                  { code: "en", label: "English" },
+                  { code: "kn", label: "ಕನ್ನಡ" },
+                  { code: "hi", label: "हिन्दी" },
+                  { code: "ta", label: "தமிழ்" },
+                  { code: "te", label: "తెలుగు" },
+                  { code: "ml", label: "മലയാളം" },
+                ].map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => handleLanguageChange(l.code)}
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: selectedLanguage === l.code ? 600 : 500,
+                      padding: "8px 18px",
+                      borderRadius: 20,
+                      border: selectedLanguage === l.code
+                        ? "2px solid #2E7D5E"
+                        : "1.5px solid #DDD5C8",
+                      background: selectedLanguage === l.code
+                        ? "#2E7D5E"
+                        : "#FDFAF6",
+                      color: selectedLanguage === l.code
+                        ? "#FFFFFF"
+                        : "#4A4440",
+                      cursor: "pointer",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Download PDF */}
 
-            <button onClick={handleDownloadPDF}>Download Report</button>
+            <button
+              onClick={handleDownloadPDF}
+              style={{
+                padding: "14px 32px",
+                borderRadius: 14,
+                border: "none",
+                background: "linear-gradient(135deg, #1C3A2F 0%, #2E7D5E 100%)",
+                color: "#F5EFE6",
+                fontSize: 15,
+                fontFamily: "'DM Sans', sans-serif",
+                fontWeight: 600,
+                cursor: "pointer",
+                letterSpacing: "0.02em",
+                transition: "all 0.2s",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              Download Report
+            </button>
 
             {/* Report */}
 
