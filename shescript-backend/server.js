@@ -2,19 +2,16 @@ import express from "express";
 import { MongoClient } from "mongodb";
 import cors from "cors";
 import dotenv from "dotenv";
-import searchRoutes from "./routes/search.routes.js";
+import dns from "node:dns";
 
+// Force Google DNS to bypass local network DNS SRV blocking
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Define the API route path
-app.use("/api/search", searchRoutes);
-
-
 
 const uri = process.env.MONGO_URI;
 
@@ -23,17 +20,24 @@ const client = new MongoClient(uri);
 let collection;
 
 async function connectDB() {
-    await client.connect();
-    const db = client.db("shescript");
-    collection = db.collection("searches");
-    console.log("MongoDB Connected");
+    try {
+        await client.connect();
+        const db = client.db("shescript");
+        collection = db.collection("searches");
+        console.log("MongoDB Connected");
+    } catch (err) {
+        console.error("MongoDB connection failed:", err.message);
+        console.log("Server running without DB. Retrying in 5 seconds...");
+        setTimeout(connectDB, 5000);
+    }
 }
-
-connectDB();
 
 /* POST /save */
 
 app.post("/save", async (req, res) => {
+    if (!collection) {
+        return res.status(503).json({ error: "Database not connected yet" });
+    }
     try {
         const { medicine, result, language } = req.body;
 
@@ -54,6 +58,9 @@ app.post("/save", async (req, res) => {
 /* GET /history */
 
 app.get("/history", async (req, res) => {
+    if (!collection) {
+        return res.json([]);
+    }
     try {
         const data = await collection
             .find()
@@ -70,4 +77,5 @@ app.get("/history", async (req, res) => {
 
 app.listen(3000, () => {
     console.log("Server running on port 3000");
+    connectDB();
 });

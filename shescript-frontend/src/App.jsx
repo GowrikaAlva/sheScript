@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import SearchBar from "./components/SearchBar";
 import ResultCard from "./components/ResultCard";
 import WarningBanner from "./components/WarningBanner";
@@ -15,25 +15,7 @@ function App() {
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
   const [searched, setSearched] = useState(false);
-  const [history, setHistory] = useState([]);
-
   const cache = {};
-
-  /* ───────── Load history ───────── */
-
-  async function loadHistory() {
-    try {
-      const res = await fetch("http://localhost:3000/history");
-      const data = await res.json();
-      setHistory(data);
-    } catch (err) {
-      console.log("History error:", err);
-    }
-  }
-
-  useEffect(() => {
-    loadHistory();
-  }, []);
 
   /* ───────── PDF Generation ───────── */
 
@@ -232,19 +214,6 @@ function App() {
           <SearchBar onSearch={handleSearch} loading={loading} />
         </div>
 
-        {/* History */}
-
-        {history.length > 0 && (
-          <div style={{ width: "100%", maxWidth: 560 }}>
-            <h4>Recent Searches</h4>
-
-            {history.map((item, index) => (
-              <div key={index}>
-                {item.medicine} ({item.language})
-              </div>
-            ))}
-          </div>
-        )}
 
         {loading && <p>Reading prescription...</p>}
         {isTranslating && <p>Translating...</p>}
