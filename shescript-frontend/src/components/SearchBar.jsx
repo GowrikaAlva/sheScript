@@ -44,9 +44,9 @@ export default function SearchBar({ onSearch, loading }) {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto">
+    <div style={{ width: "100%", maxWidth: 580, margin: "0 auto" }}>
       {/* ── Header ── */}
-      <div className="text-center mb-8">
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
         <div className="inline-flex items-center gap-2 mb-3">
           <span style={{ fontSize: 36 }}>𓆼</span>
           <h1 style={{
