@@ -126,6 +126,27 @@ export default function LandingPage() {
           Log in
         </span>
       </p>
+
+      <p
+        style={{
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 13,
+          color: "#9E9488",
+          marginTop: 8,
+        }}
+      >
+        <span
+          onClick={() => navigate("/app")}
+          style={{
+            color: "#2E7D5E",
+            fontWeight: 600,
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
+        >
+          Use without login
+        </span>
+      </p>
     </div>
   );
 }
