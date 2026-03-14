@@ -80,7 +80,7 @@ export default function LandingPage() {
       >
         <Feature icon="📷" title="Scan Prescriptions" />
         <Feature icon="🌍" title="Translate Languages" />
-        <Feature icon="⚠️" title="Women Safety Warnings" />
+        <Feature icon="⚠️" title="Medicine Reminder" />
         <Feature icon="📅" title="Dosage Checklist" />
       </div>
 
